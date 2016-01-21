@@ -48,38 +48,7 @@
 			</div>
 		</div>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.4/socket.io.js"></script>
-		<script>
-			(() => {
-				"use strict";
-				const socket = io();
-				socket.on("somethingelse", (data) => {
-					let log = document.getElementById("log");
-
-					let wrapper = document.createElement("div");
-					wrapper.classList.add("log-item");
-					wrapper.classList.add("twelve");
-					wrapper.classList.add("columns");
-
-					let icon = document.createElement("i");
-					icon.classList.add("menu-option-log");
-					icon.classList.add("fa");
-					icon.classList.add("fa-plus");
-
-					let text = document.createElement("span");
-					text.textContent = data.msg;
-
-					wrapper.appendChild(icon);
-					wrapper.appendChild(text);
-
-					const lastLog = document.querySelector(".log-item")
-					log.insertBefore(wrapper, lastLog);
-				});
-				Array.from(document.getElementsByClassName("grid-element")).forEach(element => {
-					element.addEventListener("click", (event) => {
-						socket.emit("move", {direction : event.target.getAttribute("data-direction")});
-					});
-				});
-			})();
-		</script>
+		<script src="../js/functions.js"></script>
+		<script src="../js/map.js"></script>
 	</body>
 </html>

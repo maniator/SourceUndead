@@ -68,21 +68,34 @@ app.use("/logout", logout);
 app.use("/", authenticate, index);
 
 //function routing for socket handlers
-import {move} from "./routes/io-functions";
+import {move, init} from "./routes/io-functions";
 
 //socket routing
 let bucket = {}; //i haz a bukkit
 io.sockets.on("connection", socket => {
-	if (socket.request.sessionID && !bucket[socket.request.sessionID]) {
-		bucket[socket.request.sessionID] = socket.id; //nuuu they stealin mah bukkit
+	if (socket.request.sessionID && socket.request.session.player) {
+		init(socket.request.session); //create game redis tracker
+
+		//check for existing sessions in the bukkit
+		if (socket.request.sessionID && !bucket[socket.request.sessionID]) {
+			bucket[socket.request.sessionID] = socket.id; //nuuu they stealin mah bukkit
+		}
+		console.log("Connection has been made", socket.request.sessionID);
+
+		socket.on("move", (data) => move(io, data, socket.request, bucket));
+		
+		//dicsonnect
+		//-dump redis TODO: into mysql
+		//emit disconnection
+		//empty bucket of session
+		socket.on('disconnect', function () {
+	        console.log('Client disconnected');
+	        delete bucket[socket.request.sessionID];
+	        io.sockets.emit('disconnect');
+	        client.del("game-1");
+	        client.del("player-set-1");
+	    });
 	}
-	console.log("Connection has been made", socket.request.sessionID);
-	socket.on("move", (data) => move(io, data, socket.request, bucket));
-	socket.on('disconnect', function () {
-        console.log('Client disconnected');
-        delete bucket[socket.request.sessionID];
-        io.sockets.emit('disconnect');
-    });
 });
 
 export {client};

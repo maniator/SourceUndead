@@ -53,3 +53,28 @@ function xhr(args) {
 		hr.send(args.data || null);
 	});
 }
+
+//grab event log parent element
+//insert new log item with message
+function addEventLog(msg) {
+	let log = document.getElementById("log");
+
+	let wrapper = document.createElement("div");
+	wrapper.classList.add("log-item");
+	wrapper.classList.add("twelve");
+	wrapper.classList.add("columns");
+
+	let icon = document.createElement("i");
+	icon.classList.add("menu-option-log");
+	icon.classList.add("fa");
+	icon.classList.add("fa-plus");
+
+	let text = document.createElement("span");
+	text.textContent = msg;
+
+	wrapper.appendChild(icon);
+	wrapper.appendChild(text);
+
+	const lastLog = document.querySelector(".log-item")
+	log.insertBefore(wrapper, lastLog);
+}
