@@ -1,5 +1,5 @@
 "use strict";
-import {client} from "../server";
+import {client, io} from "../server";
 
 //movement map for xy coordinate modifiers (thanks @rlemon)
 const movement = {
@@ -15,7 +15,7 @@ const movement = {
 
 //socket move function
 //pass in the socket session and data
-export function move(io, data, socket, bucket) {
+export function move(data, socket, bucket) {
 	if (data.direction === "null") {
 		return false;
 	} //if no direction, ignore this function

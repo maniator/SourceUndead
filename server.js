@@ -82,7 +82,7 @@ io.sockets.on("connection", socket => {
 		}
 		console.log("Connection has been made", socket.request.sessionID);
 
-		socket.on("move", (data) => move(io, data, socket.request, bucket));
+		socket.on("move", (data) => move(data, socket.request, bucket));
 		
 		//dicsonnect
 		//-dump redis TODO: into mysql
@@ -99,3 +99,4 @@ io.sockets.on("connection", socket => {
 });
 
 export {client};
+export {io};
