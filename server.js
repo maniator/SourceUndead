@@ -89,11 +89,11 @@ io.sockets.on("connection", socket => {
 		//emit disconnection
 		//empty bucket of session
 		socket.on('disconnect', function () {
-	        console.log('Client disconnected');
-	        delete bucket[socket.request.sessionID];
-	        io.sockets.emit('disconnect');
-	        client.del("game-1");
-	        client.del("player-set-1");
+			console.log('Client disconnected');
+			delete bucket[socket.request.sessionID];
+			io.sockets.emit('disconnect');
+			client.del("game-1");
+			client.del("player-set-1");
 	    });
 	}
 });
