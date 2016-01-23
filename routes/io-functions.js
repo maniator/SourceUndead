@@ -33,12 +33,10 @@ export function move(data, socket, bucket) {
 	client.hmset(socket.session.player.id, socket.session.player);
 
 	client.smembers("game-1", (err, reply) => {
-		console.log("game keys", reply);
 		reply.map(x => {
 		client.hgetall(x, (err, reply) => {
-				console.log("reply",reply);
+				similarTile(reply, socket);
 				const msg = `${reply.user} is on ${reply.x}, ${reply.y}`;
-				console.log("location emit", msg);
 				io.sockets.emit("locations", {location:msg});
 			});
 		});
@@ -54,4 +52,14 @@ export function init(socket) {
 	//redis push player to game set
 		client.sadd("game-1", socket.player.id);
 		client.hmset(socket.player.id, socket.player);
+}
+
+function similarTile(data, socket) {
+	if (data.user == socket.session.player.user) return false;
+	console.log(`${socket.session.player.x},${socket.session.player.y} (${socket.session.player.user}), ${data.x},${data.y} (${data.user})`);
+	console.log(typeof +data.x, typeof +data.y, typeof socket.session.player.x, typeof socket.session.player.y);
+	if (+data.x == socket.session.player.x && +data.y == socket.session.player.y) {
+		const string = `${socket.session.player.user} and ${data.user} are on the same tile!`;
+		io.sockets.emit("sameTile", {msg:string});
+	}
 }
