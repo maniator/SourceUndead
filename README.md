@@ -31,12 +31,15 @@ Game Status: [Under Development]
 
 You can currently create an account, login, and navigate the routing. I am currently setting up the map system, and progress is going well. 
 
-~~Expect to be able to move, and see other players moving in the next couple of weeks!~~ DONE
+~~Expect to be able to move, and see other players moving in the next couple of weeks!~~ DONE\
+
 You can now move around with other players in real time, see them on the same coordinates as you, and the backend tracks angle bearing within your sense radius!
 
 Special Thanks
 ==============
 
 [@rlemon](https://github.com/rlemon) -- Helping design, teach, and create the express node routing system. Also screamed BABEL at me several times.
+
 [@ssube](https://github.com/ssube) -- Designed the algorithm to determine player bearing within radius of sense, along with teaching me redis, and why I should use it.
+
 [@ralt](https://github.com/ralt) -- For yelling at my shit code so that I wrote good code. U da real MVP.
