@@ -70,9 +70,22 @@ app.use("/", authenticate, index);
 //function routing for socket handlers
 import {move, init} from "./routes/io-functions";
 
+//object for delayed log out
+let disconnection = {
+	sid : null, //socket id
+	delay : null //timeout id
+};
+
 //socket routing
 let bucket = {}; //i haz a bukkit
 io.sockets.on("connection", socket => {
+	//check for disconnection, compare socket ids, and remove timeout if sockets match
+	if (disconnection.delay && disconnection.sid == socket.request.sessionID) {
+		clearTimeout(disconnection.delay);
+		disconnection.sid = null;
+		console.log(`${socket.request.session.player.user} has reconnected!`);
+	}
+	// make sure session and player exist!
 	if (socket.request.sessionID && socket.request.session.player) {
 		init(socket.request.session); //create game redis tracker
 
@@ -86,15 +99,18 @@ io.sockets.on("connection", socket => {
 		
 		//dicsonnect
 		//-dump redis TODO: into mysql
-		//emit disconnection
 		//empty bucket of session
 		socket.on('disconnect', function () {
-			console.log('Client disconnected');
-			delete bucket[socket.request.sessionID];
-			io.sockets.emit('disconnect');
-			client.del("game-1");
-			client.del("player-set-1");
-	    });
+			disconnection.sid = socket.request.sessionID;
+			disconnection.delay = setTimeout(() => {
+				console.log('Client disconnected');
+				delete bucket[socket.request.sessionID];
+				const msg = `${socket.request.session.player.user} has disconnected`;
+				io.sockets.emit('disconnect', {data : msg});
+				client.del("game-1");
+				client.del("player-set-1");
+			}, 30000); //player has 30 seconds to reconnect before force logout/leave match
+		});
 	}
 });
 
