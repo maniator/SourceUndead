@@ -13,13 +13,13 @@ document.getElementById("login").addEventListener("click", event => {
 	let errorMsg = ""; //append to me!
 
 	//check input length (basic validation)
-	if (validateInputLength(username, 3)) {
+	if (validateInputLength(username, 0)) {
 		error++;
-		errorMsg += " Usernames must be 3 or more characters."
+		errorMsg += " You can't login with no username."
 	}
-	if (validateInputLength(password, 8)) {
+	if (validateInputLength(password, 0)) {
 		error++;
-		errorMsg += " Passwords must be 8 or more characters."
+		errorMsg += " We may not have the best security, but it's better than that!"
 	}
 
 	//if error, display it
