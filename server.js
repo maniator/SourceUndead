@@ -91,7 +91,7 @@ io.sockets.on("connection", socket => {
 
 		//check for existing sessions in the bukkit
 		if (socket.request.sessionID && !bucket[socket.request.sessionID]) {
-			bucket[socket.request.sessionID] = socket.id; //nuuu they stealin mah bukkit
+			bucket[socket.request.session.player.id] = socket.id; //nuuu they stealin mah bukkit
 		}
 		console.log("Connection has been made", socket.request.sessionID);
 

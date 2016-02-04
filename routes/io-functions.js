@@ -48,9 +48,16 @@ export function move(data, socket, bucket) {
 				if (reply.id != socket.session.player.id) {
 					const tile = similarTile(reply, socket);
 					let prox;
-					if (!tile) prox = proximity(reply, socket);
-					console.log(prox);
-					//TODO calculate directional bearing from angle returned
+					if (!tile) { //if not on the same tile
+						prox = proximity(reply, socket);
+						//TODO calculate directional bearing from angle returned
+						const sock = bucket[reply.id];
+						console.log(`Socket id of ${reply.user} - ${sock}`);
+						if (prox != -1)  {
+							console.log(`Sending ${prox} bearing to ${reply.user}`);
+							io.sockets.connected[sock].emit("bearing", {direction: prox});
+						}
+					}
 				}
 			});
 		});
@@ -61,6 +68,12 @@ export function move(data, socket, bucket) {
 	io.sockets.emit("somethingelse", {msg:string});
 }
 
+function calculateBearing(prox) {
+	//function by copy
+	//takes an array of bearings, and accesses them via 
+	return ["n", "ne", "e", "se", "s", "sw", "w", "nw"][(prox + 360 / 16) % 360 / (360 / 8) | 0]
+}
+//initiate redis game
 export function init(socket) {
 	//redis push player to game set
 		client.sadd("game-1", socket.player.id);
@@ -81,14 +94,14 @@ function similarTile(data, socket) {
 //check distance to player via proximity check
 function proximity(data, socket) {
 	// Get the distance as a unit vector
-	const v = getDistance(data, socket.session.player);
+	const v = getDistance(socket.session.player, data);
 	console.log("Distance to player", v)
 	//boolean radius check
 	const rad = withinRadius(v, socket.session.player.radius);
 	if (rad) {
 		const uv = makeUnit(v); //make unit vector
 		const angle = angleFromAtan(Math.atan2(+uv.y, +uv.x)); //get arctangent angle
-		return angle;
+		return calculateBearing(angle);;
 	} else {
 		return -1;
 	}
@@ -121,3 +134,4 @@ function angleFromAtan(a) {
 	} else {
 		return ((2*Math.PI + a) * 360 / (2*Math.PI));
 	}
+}
