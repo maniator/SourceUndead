@@ -30,18 +30,27 @@ export function move(data, socket, bucket) {
 	socket.session.player.x += x;
 	socket.session.player.y += y;
 
-	client.hmset(socket.session.player.id, socket.session.player);
+	client.hmset(socket.session.player.id, socket.session.player); //re-store player object with new coordinates
 
+	/*
+		Iterate game to get all player IDs
+		get player object from redis, using game-id id index
+		grab location
+		check for functions (same tile, proximity..)
+	 */
 	client.smembers("game-1", (err, reply) => {
 		reply.map(x => {
-		client.hgetall(x, (err, reply) => {
-				const msg = `${reply.user} is on ${reply.x}, ${reply.y}`;
-				io.sockets.emit("locations", {location:msg});
+			client.hgetall(x, (err, reply) => {
+				if (reply.user != socket.session.player.user) { //no point in displaying yourself to yourself
+					const msg = `${reply.user} is on ${reply.x}, ${reply.y}`;
+					io.sockets.emit("locations", {location:msg});
+				}
 				if (reply.id != socket.session.player.id) {
 					const tile = similarTile(reply, socket);
 					let prox;
 					if (!tile) prox = proximity(reply, socket);
 					console.log(prox);
+					//TODO calculate directional bearing from angle returned
 				}
 			});
 		});
@@ -58,6 +67,8 @@ export function init(socket) {
 		client.hmset(socket.player.id, socket.player);
 }
 
+//funtion to check if 2 players are standing on the same time
+//return true or false
 function similarTile(data, socket) {
 	if (data.user == socket.session.player.user) return false;
 	if (+data.x == socket.session.player.x && +data.y == socket.session.player.y) {
@@ -67,26 +78,30 @@ function similarTile(data, socket) {
 	} else return false;
 }
 
+//check distance to player via proximity check
 function proximity(data, socket) {
 	// Get the distance as a unit vector
 	const v = getDistance(data, socket.session.player);
 	console.log("Distance to player", v)
+	//boolean radius check
 	const rad = withinRadius(v, socket.session.player.radius);
-	console.log(rad)
 	if (rad) {
-		const uv = makeUnit(v);
-		const angle = angleFromAtan(Math.atan2(+uv.y, +uv.x));
+		const uv = makeUnit(v); //make unit vector
+		const angle = angleFromAtan(Math.atan2(+uv.y, +uv.x)); //get arctangent angle
 		return angle;
 	} else {
 		return -1;
 	}
 }
 
+//function to check if a player has entered another's radius
 function withinRadius(v, r) {
 	console.log(v.l, typeof v.l, r)
 	return v.l <= r;
 }
 
+//calulate actual distance between 2 players
+//return object form, and length
 function getDistance(playerA, playerB) {
 	const x = playerA.x - playerB.x;
 	const y = playerA.y - playerB.y;
@@ -94,14 +109,15 @@ function getDistance(playerA, playerB) {
 	return {x, y, l};
 }
 
+//create unit vector from distance object
 function makeUnit(v) {
 	return {x: (+v.x / +v.l), y: (+v.y / +v.l), l: 1};
 }
 
+//calculate angle using arctangent
 function angleFromAtan(a) {
 	if (a > 0) {
 		return (a * 360 / (2 * Math.PI));
 	} else {
 		return ((2*Math.PI + a) * 360 / (2*Math.PI));
 	}
-}
