@@ -100,8 +100,9 @@ function proximity(data, socket) {
 	const rad = withinRadius(v, socket.session.player.radius);
 	if (rad) {
 		const uv = makeUnit(v); //make unit vector
-		const angle = angleFromAtan(Math.atan2(+uv.y, +uv.x)); //get arctangent angle
-		return calculateBearing(angle);;
+		const angle = angleFromAtan(Math.atan2(+uv.x, +uv.y)); //get arctangent angle
+		console.log("angle",angle);
+		return calculateBearing(angle);
 	} else {
 		return -1;
 	}
