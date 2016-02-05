@@ -3,7 +3,16 @@
 	//create the socket connection
 	const socket = io();
 	
+	function setLocation(x,y) {
+		document.getElementById("x").textContent = x;
+		document.getElementById("y").textContent = y;
+	}
 	//emission routes
+	//init location
+	socket.on("location", data => {
+		console.log(data)
+		setLocation(data.data.x, data.data.y)
+	});
 	//I need to rename this one...
 	socket.on("somethingelse", data => addEventLog(data.msg));
 	//broadcasted player locations

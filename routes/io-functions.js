@@ -23,14 +23,21 @@ export function move(data, socket, bucket) {
 	let [x=0,y=0] = movement[data.direction];
 
 	//check for map boundaries
-	if (socket.session.player.x + x > 100 || socket.session.player.x + x < 1) x = 0;
-	if (socket.session.player.y + y > 100 || socket.session.player.y + y < 1) y = 0;
+	if (socket.request.session.player.x + x > 100 || socket.request.session.player.x + x < 1) x = 0;
+	if (socket.request.session.player.y + y > 100 || socket.request.session.player.y + y < 1) y = 0;
 	
 	//apply modification to player object
-	socket.session.player.x += x;
-	socket.session.player.y += y;
+	socket.request.session.player.x += x;
+	socket.request.session.player.y += y;
 
-	client.hmset(socket.session.player.id, socket.session.player); //re-store player object with new coordinates
+	socket.emit("location", {
+		data : {
+			x : socket.request.session.player.x,
+			y : socket.request.session.player.y
+		}
+	});
+
+	client.hmset(socket.request.session.player.id, socket.request.session.player); //re-store player object with new coordinates
 
 	/*
 		Iterate game to get all player IDs
@@ -41,11 +48,11 @@ export function move(data, socket, bucket) {
 	client.smembers("game-1", (err, reply) => {
 		reply.map(x => {
 			client.hgetall(x, (err, reply) => {
-				if (reply.user != socket.session.player.user) { //no point in displaying yourself to yourself
+				if (reply.user != socket.request.session.player.user) { //no point in displaying yourself to yourself
 					const msg = `${reply.user} is on ${reply.x}, ${reply.y}`;
 					io.sockets.emit("locations", {location:msg});
 				}
-				if (reply.id != socket.session.player.id) {
+				if (reply.id != socket.request.session.player.id) {
 					const tile = similarTile(reply, socket);
 					let prox;
 					if (!tile) { //if not on the same tile
@@ -64,7 +71,7 @@ export function move(data, socket, bucket) {
 	});
 
 	//string to return to client for event log
-	const string = `${socket.session.player.user} has moved ${data.direction} to [${socket.session.player.x},${socket.session.player.y}]`;
+	const string = `${socket.request.session.player.user} has moved ${data.direction} to [${socket.request.session.player.x},${socket.request.session.player.y}]`;
 	io.sockets.emit("somethingelse", {msg:string});
 }
 
@@ -76,8 +83,14 @@ function calculateBearing(prox) {
 //initiate redis game
 export function init(socket) {
 	//redis push player to game set
-		client.sadd("game-1", socket.player.id);
-		client.hmset(socket.player.id, socket.player);
+	client.sadd("game-1", socket.request.session.player.id);
+	client.hmset(socket.request.session.player.id, socket.request.session.player);
+	socket.emit("location", {
+		data : {
+			x : socket.request.session.player.x,
+			y : socket.request.session.player.y
+		}
+	});
 }
 
 //funtion to check if 2 players are standing on the same time

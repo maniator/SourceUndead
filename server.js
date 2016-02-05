@@ -87,7 +87,7 @@ io.sockets.on("connection", socket => {
 	}
 	// make sure session and player exist!
 	if (socket.request.sessionID && socket.request.session.player) {
-		init(socket.request.session); //create game redis tracker
+		init(socket); //create game redis tracker
 
 		//check for existing sessions in the bukkit
 		if (socket.request.sessionID && !bucket[socket.request.sessionID]) {
@@ -95,7 +95,7 @@ io.sockets.on("connection", socket => {
 		}
 		console.log("Connection has been made", socket.request.sessionID);
 
-		socket.on("move", (data) => move(data, socket.request, bucket));
+		socket.on("move", (data) => move(data, socket, bucket));
 		
 		//dicsonnect
 		//-dump redis TODO: into mysql
@@ -125,7 +125,6 @@ io.sockets.on("connection", socket => {
 				//remove player key from game
 				client.srem("game-1", socket.request.session.player.id);
 				//if game id is empty, destroy game from redis and dump data to mysql
-				socket.request.session.destroy(); //destroy session
 			}, 30000); //player has 30 seconds to reconnect before force logout/leave match
 		});
 	}
