@@ -101,14 +101,31 @@ io.sockets.on("connection", socket => {
 		//-dump redis TODO: into mysql
 		//empty bucket of session
 		socket.on('disconnect', function () {
-			disconnection.sid = socket.request.sessionID;
+			disconnection.sid = socket.request.sessionID; //grab session id
 			disconnection.delay = setTimeout(() => {
-				console.log('Client disconnected');
+				//set timeout to variable, in case of reconnection
+				console.log(`${socket.request.session.player.user} has disconnected`);
 				delete bucket[socket.request.sessionID];
 				const msg = `${socket.request.session.player.user} has disconnected`;
+				//emit the disconnection event
 				io.sockets.emit('disconnect', {data : msg});
-				client.del("game-1");
-				client.del("player-set-1");
+
+				//loop game id
+				client.smembers("game-1", (err, reply) => {
+					//map the response array
+					reply.map(x => {
+						//grab object from array key
+						client.hgetall(x, (err, reply) => {
+							//if ids match, remove player from game
+							//todo: dump player game data to mysql
+							if (reply.id == socket.request.session.player.id) client.hdel(reply.id, socket.request.session.player);
+						});
+					});
+				});
+				//remove player key from game
+				client.srem("game-1", socket.request.session.player.id);
+				//if game id is empty, destroy game from redis and dump data to mysql
+				socket.request.session.destroy(); //destroy session
 			}, 30000); //player has 30 seconds to reconnect before force logout/leave match
 		});
 	}
