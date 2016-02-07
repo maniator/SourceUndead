@@ -80,6 +80,7 @@ function calculateBearing(prox) {
 	//takes an array of bearings, and accesses them via 
 	return ["n", "ne", "e", "se", "s", "sw", "w", "nw"][(prox + 360 / 16) % 360 / (360 / 8) | 0]
 }
+
 //initiate redis game
 export function init(socket) {
 	//redis push player to game set
