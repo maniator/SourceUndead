@@ -16,11 +16,6 @@ app.route("/games")
 		//return list style
 		//step 1 iterate redis for games
 		//step 2 iterate game index for players
-		client.sadd("game-1", [1,2,3,4]);
-		client.sadd("game-2", [1,2,3,4,5,6,7,8]);
-		client.sadd("game-3", [9,0,8,4,3]);
-		client.sadd("game-4", [1,5,3,2,2,2,3,4,5,5]);
-		client.sadd("game-5", [1,2,3,4,5,6,7,8,90,10]);
 		let response = {};
 
 		//promisfy redis methods to stop sync async response issue

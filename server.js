@@ -91,7 +91,7 @@ io.sockets.on("connection", socket => {
 	}
 	// make sure session and player exist!
 	if (socket.request.sessionID && socket.request.session.player) {
-		init(socket); //create game redis tracker
+		//init(socket); //create game redis tracker
 
 		//check for existing sessions in the bukkit
 		if (socket.request.sessionID && !bucket[socket.request.sessionID]) {

@@ -11,6 +11,7 @@
 		url : "/lobby/games",
 		method: "GET"
 	}).then(data => {
+		console.log(data)
 		//grab lobby element
 		let lobby = document.getElementById("lobby");
 		

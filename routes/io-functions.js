@@ -82,17 +82,17 @@ function calculateBearing(prox) {
 }
 
 //initiate redis game
-export function init(socket) {
-	//redis push player to game set
-	client.sadd("game-1", socket.request.session.player.id);
-	client.hmset(socket.request.session.player.id, socket.request.session.player);
-	socket.emit("location", {
-		data : {
-			x : socket.request.session.player.x,
-			y : socket.request.session.player.y
-		}
-	});
-}
+// export function init(socket) {
+// 	//redis push player to game set
+// 	client.sadd("game-1", socket.request.session.player.id);
+// 	client.hmset(socket.request.session.player.id, socket.request.session.player);
+// 	socket.emit("location", {
+// 		data : {
+// 			x : socket.request.session.player.x,
+// 			y : socket.request.session.player.y
+// 		}
+// 	});
+// }
 
 //funtion to check if 2 players are standing on the same time
 //return true or false
