@@ -7,6 +7,12 @@
 		url : "/lobby/games",
 		method: "GET"
 	}).then(data => {
-		console.log(data);
+		let select = document.getElementById("lobbies");
+		JSON.parse(data).map(obj => {
+			let option = document.createElement("option");
+			option.value = obj.game;
+			option.textContent = obj.game + " ("+obj.players.length+"/11)";
+			select.appendChild(option)
+		});
 	});
 })();

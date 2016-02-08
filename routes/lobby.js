@@ -24,7 +24,14 @@ app.route("/games")
 		let response = {};
 		let keysAsync = Promise.promisify(client.keys, {context: client});
 		let smembersAsync = Promise.promisify(client.smembers, {context: client});
-		keysAsync("*game*").then(reply => {
+		async function getOpenLobbies() {
+			const games = await keysAsync("*game*");
+			const players = await Promise.all(games.map(game => smembersAsync(game)));
+			const combined = games.map((game, i) => ({game, players: players[i]}));
+			return combined.filter(game => game.players.length);
+		}
+		getOpenLobbies().then(data => res.send(data));
+		/*keysAsync("*game*").then(reply => {
 			reply.map(game => {
 				smembersAsync(game).then(players => {
 					response[game] = players.length;
@@ -35,12 +42,6 @@ app.route("/games")
 		}).then(() => {
 			console.log("keys then");
 			res.send(response);
-		});
-		/*	reply.map((game, index) => {
-				client.smembers(game, (err, reply) => {
-					response[game] = reply.length;
-				});
-			});
 		});*/
 	});
 export default app;

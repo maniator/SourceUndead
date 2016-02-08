@@ -21,6 +21,9 @@ a:hover {
 ul {
 	list-style:none;
 }
+#lobbies {
+	color:black;
+}
 .error {
 	background: #852020;
 	font-size: 100%;
