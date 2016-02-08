@@ -31,17 +31,5 @@ app.route("/games")
 			return combined.filter(game => game.players.length);
 		}
 		getOpenLobbies().then(data => res.send(data));
-		/*keysAsync("*game*").then(reply => {
-			reply.map(game => {
-				smembersAsync(game).then(players => {
-					response[game] = players.length;
-					console.log("iteration");
-				});
-				console.log("after game");
-			});
-		}).then(() => {
-			console.log("keys then");
-			res.send(response);
-		});*/
 	});
 export default app;
