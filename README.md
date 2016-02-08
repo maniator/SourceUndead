@@ -31,11 +31,11 @@ Game Status: [Under Development]
 
 You can currently create an account, login, and navigate the routing. I am currently setting up the map system, and progress is going well. 
 
-~~Expect to be able to move, and see other players moving in the next couple of weeks!~~ DONE
-
-~~You can now move around with other players in real time, see them on the same coordinates as you, and the backend tracks angle bearing within your sense radius!~~
+You can now move around with other players in real time, see them on the same coordinates as you, and the backend tracks angle bearing within your sense radius!
 
 Players now have a sense of hearing (but apparently shitty eyesight!). Your HUD now displays bearing flashers when players move in your vicinity.
+
+Currently developing the game lobby, to setup 15 player games.
 
 Special Thanks
 ==============
