@@ -15,18 +15,49 @@
 			<div class="nine columns stats">
 				<div class="ten columns">
 					<fieldset>
-						<legend>Pick a game</legend>
-						<select id="lobbies"></select> <button class="button">Join Game</button>
+						<legend>Create a game</legend>
+						<div class="twelve columns">
+							<form>
+								<div class="row">
+									<div class="twelve columns">
+										<label for="lobby">Lobby Name</label>
+										<input class="u-full-width" id="lobby" type="text" placeholder="Lobby Name">
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="twelve columns">
+										<label for="num">Number of Players</label>
+										<input class="u-full-width" id="num" type="number" placeholder="Number of Players (Max 15)">
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="twelve columns">
+										<label class="label-body" for="private">
+											<span class="label-body">Private Lobby</span>
+											<input class="" id="private" type="checkbox">
+										</label>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="twelve columns">
+										<button id="createGame" class="u-full-width button">Submit</button>
+									</div>
+								</div>
+							</form>
+						</div>
 					</fieldset>
 				</div>
 			</div>
 			<div class="three columns menu full-page">
-				<h5>Lobby Menu</h5>
+				<h5>Create a Game</h5>
 				<div class="menu-item twelve columns">
 					<i class="menu-option fa fa-line-chart fa-2x"></i><a href="/" class="menu-option-text">Statistics</a>
 				</div>
 				<div class="menu-item twelve columns">
-					<i class="menu-option fa fa-gamepad fa-2x"></i><a href="/createGame" class="menu-option-text">Create a Game</a>
+					<i class="menu-option fa fa-hourglass-start fa-2x"></i><a href="/lobby" class="menu-option-text">Lobby</a>
 				</div>
 			</div>
 		</div>

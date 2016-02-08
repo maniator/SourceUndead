@@ -52,6 +52,7 @@ import login from "./routes/login";
 import logout from "./routes/logout";
 import create from "./routes/create";
 import lobby from "./routes/lobby";
+import createGame from "./routes/createGame";
 
 //app middleware for checking if logged in
 function authenticate(req, res, next) {
@@ -67,6 +68,7 @@ app.use("/create", create);
 app.use("/login", login);
 app.use("/logout", logout);
 app.use("/lobby", authenticate, lobby);
+app.use("/createGame", authenticate, createGame);
 app.use("/", authenticate, index);
 
 //function routing for socket handlers
