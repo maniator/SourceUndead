@@ -1,5 +1,9 @@
 (() => {
 	"use strict";
+	function showId(event) {
+		event.preventDefault();
+		console.log(this.parentNode.parentNode.parentNode);
+	}
 	//create the socket connection
 	//xhr to /lobby POST
 	//return list of games, and number of players waiting
@@ -32,6 +36,7 @@
 			let button = document.createElement("button");
 			button.textContent = "Join Game"
 			button.className = "button";
+			button.addEventListener("click", showId, false);
 
 			//append all to document
 			column.appendChild(game);

@@ -10,6 +10,12 @@ const app = express.Router();
 app.route("/")
 	.get((req, res) => res.render('createGame.ejs')) //render form
 	.post((req, res) => {
-
+		const {name, permission} = req.body;
+		console.log(name, permission);
+		res.send({
+			"msg":"Your lobby was created! You will be redirected to your lobby momentarily..",
+			"flag":false,
+			"title":": Lobby Created"
+		})
 	});
 export default app;
