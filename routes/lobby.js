@@ -22,11 +22,18 @@ app.route("/games")
 		client.sadd("game-4", [1,5,3,2,2,2,3,4,5,5]);
 		client.sadd("game-5", [1,2,3,4,5,6,7,8,90,10]);
 		let response = {};
+
+		//promisfy redis methods to stop sync async response issue
 		let keysAsync = Promise.promisify(client.keys, {context: client});
 		let smembersAsync = Promise.promisify(client.smembers, {context: client});
+
+		//define async function
 		async function getOpenLobbies() {
+			//await responses from async redis keys method
 			const games = await keysAsync("*game*");
+			//await response from mapped smembers method
 			const players = await Promise.all(games.map(game => smembersAsync(game)));
+			//compile results of awaited methods into object to return
 			const combined = games.map((game, i) => ({game, players: players[i]}));
 			return combined.filter(game => game.players.length);
 		}
