@@ -2,7 +2,14 @@
 	"use strict";
 	function showId(event) {
 		event.preventDefault();
-		console.log(this.parentNode.parentNode.parentNode);
+		const game = this.parentNode.parentNode.parentNode.id;
+		xhr({
+			url: "/lobby/join/",
+			method: "POST",
+			data: `id=${game}`
+		}).then(data => {
+			console.log(data);
+		});
 	}
 	//create the socket connection
 	//xhr to /lobby POST

@@ -8,6 +8,7 @@ const app = express.Router();
 	If the user is logged in, redirect to lobby page
  */
 app.route("/")
+	//if player is already in a lobby, redirect to lobby waiting room
 	.get((req, res) => res.render('lobby.ejs')) //render form
 
 app.route("/games")
@@ -28,10 +29,10 @@ app.route("/games")
 			const games = await keysAsync("*game*");
 			//await response from mapped smembers method
 			const players = await Promise.all(games.map(game => smembersAsync(game)));
+			console.log(players);
 			//metadata
 			const metakey = await keysAsync("*metadata*");
 			const data = await Promise.all(metakey.map(meta => hgetallAsync(meta)));
-			console.log(data);
 			//compile results of awaited methods into object to return
 			const combined = games.map((game, i) => ({
 				game,
@@ -40,9 +41,26 @@ app.route("/games")
 			}));
 			return combined.filter(game => game.players.length);
 		}
-		getOpenLobbies().then(data => {
-			console.log(data);
-			res.send(data);
-		});
+		getOpenLobbies().then(data => res.send(data));
 	});
+
+app.route("/join")
+        .post((req,res) => {
+		//check if player is in another lobby, if so, return
+		//TODO lobby refresh on success
+                const game = req.body.id;
+		console.log(game)
+		client.sadd(game, req.session.player.id);
+                client.hmset(req.session.player.id, req.session.player, (err, reply) => {
+			if (err) {
+				res.send({
+					msg: "There was an error joining this lobby. Please try again.",
+					success: false
+				});
+			} else res.send({
+				msg: "You have joined the game!",
+				success: true
+			});
+		});
+        });
 export default app;
