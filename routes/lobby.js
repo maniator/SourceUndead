@@ -1,6 +1,6 @@
 "use strict";
 import express from "express";
-import {client} from "../server";
+import {client, io} from "../server";
 import Promise from "bluebird";
 const app = express.Router();
 
@@ -57,10 +57,12 @@ app.route("/join")
 					msg: "There was an error joining this lobby. Please try again.",
 					success: false
 				});
-			} else res.send({
-				msg: "You have joined the game!",
-				success: true
-			});
+			} else {
+				res.send({
+					msg: "You have joined the game!",
+					success: true
+				});
+			}
 		});
-        });
+	});
 export default app;

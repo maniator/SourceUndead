@@ -1,6 +1,6 @@
 "use strict";
 import express from "express";
-import {client} from "../server";
+import {client, io} from "../server";
 import Promise from "bluebird";
 const app = express.Router();
 
@@ -28,6 +28,8 @@ app.route("/")
 			"name":name,
 			"permission": permission
 		});
+
+		io.sockets.emit("refresh");
 
 		res.send({
 			"msg":"Your lobby was created! You will be redirected to your lobby momentarily..",
