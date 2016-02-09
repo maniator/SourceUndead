@@ -58,6 +58,7 @@ app.route("/join")
 					success: false
 				});
 			} else {
+				io.sockets.emit("refresh")
 				res.send({
 					msg: "You have joined the game!",
 					success: true
