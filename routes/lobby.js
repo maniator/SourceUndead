@@ -21,17 +21,24 @@ app.route("/games")
 		//promisfy redis methods to stop sync async response issue
 		let keysAsync = Promise.promisify(client.keys, {context: client});
 		let smembersAsync = Promise.promisify(client.smembers, {context: client});
-
+		let hgetallAsync = Promise.promisify(client.hgetall, {context: client});
 		//define async function
 		async function getOpenLobbies() {
 			//await responses from async redis keys method
 			const games = await keysAsync("*game*");
 			//await response from mapped smembers method
 			const players = await Promise.all(games.map(game => smembersAsync(game)));
+			//metadata
+			const metakey = await keysAsync("*metadata*");
+			const data = await Promise.all(metakey.map(meta => hgetallAsync(meta)));
+			console.log(data);
 			//compile results of awaited methods into object to return
-			const combined = games.map((game, i) => ({game, players: players[i]}));
+			const combined = games.map((game, i) => ({game, players: players[i], meta:data[i].name}));
 			return combined.filter(game => game.players.length);
 		}
-		getOpenLobbies().then(data => res.send(data));
+		getOpenLobbies().then(data => {
+			console.log(data);
+			res.send(data);
+		});
 	});
 export default app;

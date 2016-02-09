@@ -20,7 +20,7 @@
 		parsed.map(obj => {
 			//iterate the games, create a form, and respective skeleton elements
 			let form = document.createElement("form");
-			form.id = obj.id; //use this id when posting player to game
+			form.id = obj.game; //use this id when posting player to game
 			
 			let row = document.createElement("div");
 			row.classList.add("row");
@@ -30,7 +30,7 @@
 
 			//show game player data here
 			let game = document.createElement("input");
-			game.value = obj.game + " ("+obj.players.length+"/15)";
+			game.value = obj.meta + " ("+obj.players.length+"/15)";
 			game.disabled = true;
 			game.type = "text";
 

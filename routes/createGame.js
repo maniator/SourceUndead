@@ -23,7 +23,8 @@ app.route("/")
 		const id = uuid();
 		client.sadd("game-"+id, req.session.player.id);
 		client.hmset(req.session.player.id, req.session.player);
-		client.hmset(id, {
+		client.hmset("metadata"+id, {
+			"id":id,
 			"name":name,
 			"permission": permission
 		});
