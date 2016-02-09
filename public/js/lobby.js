@@ -30,7 +30,7 @@
 
 			//show game player data here
 			let game = document.createElement("input");
-			game.value = obj.meta + " ("+obj.players.length+"/15)";
+			game.value = obj.meta.name + " ("+obj.players.length+"/15)";
 			game.disabled = true;
 			game.type = "text";
 

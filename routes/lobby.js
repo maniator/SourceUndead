@@ -33,7 +33,11 @@ app.route("/games")
 			const data = await Promise.all(metakey.map(meta => hgetallAsync(meta)));
 			console.log(data);
 			//compile results of awaited methods into object to return
-			const combined = games.map((game, i) => ({game, players: players[i], meta:data[i].name}));
+			const combined = games.map((game, i) => ({
+				game,
+				players: players[i],
+				meta: data.filter(d => d.id === game.replace("game-",""))[0]
+			}));
 			return combined.filter(game => game.players.length);
 		}
 		getOpenLobbies().then(data => {
