@@ -45,20 +45,20 @@ app.route("/games")
 	});
 
 app.route("/join")
-        .post((req,res) => {
+	.post((req,res) => {
 		//check if player is in another lobby, if so, return
 		//TODO lobby refresh on success
-                const game = req.body.id;
+        const game = req.body.id;
 		console.log(game)
 		client.sadd(game, req.session.player.id);
-                client.hmset(req.session.player.id, req.session.player, (err, reply) => {
+        client.hmset(req.session.player.id, req.session.player, (err, reply) => {
 			if (err) {
 				res.send({
 					msg: "There was an error joining this lobby. Please try again.",
 					success: false
 				});
 			} else {
-				io.sockets.emit("refresh")
+				io.sockets.emit("loadWaitingRoom");
 				res.send({
 					msg: "You have joined the game!",
 					success: true

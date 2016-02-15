@@ -1,6 +1,6 @@
 (() => {
 	"use strict";
-	function showId(event) {
+	function join(event) {
 		event.preventDefault();
 		const game = this.parentNode.parentNode.parentNode.id;
 		xhr({
@@ -48,7 +48,7 @@
 				let button = document.createElement("button");
 				button.textContent = "Join Game"
 				button.className = "button";
-				button.addEventListener("click", showId, false);
+				button.addEventListener("click", join, false);
 
 				//append all to document
 				column.appendChild(game);
@@ -64,4 +64,7 @@
 	//create socket for lobby refresh triggers
 	const socket = io();
 	socket.on("refresh", loadLobby)
+	socket.on("loadWaitingRoom", data => {
+		window.location.href= `waiting/${data.id}`;
+	})
 })();

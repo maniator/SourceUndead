@@ -23,18 +23,20 @@ app.route("/")
 		const id = uuid();
 		client.sadd("game-"+id, req.session.player.id);
 		client.hmset(req.session.player.id, req.session.player);
+		console.log("Player id",req.session.player.id)
 		client.hmset("metadata-"+id, {
 			"id":id,
 			"name":name,
 			"permission": permission
 		});
 
-		io.sockets.emit("refresh");
+		io.sockets.emit("loadWaitingRoom");
 
 		res.send({
 			"msg":"Your lobby was created! You will be redirected to your lobby momentarily..",
 			"flag":false,
-			"title":": Lobby Created"
+			"title":": Lobby Created",
+			"id":`game-${id}`
 		})
 	});
 export default app;

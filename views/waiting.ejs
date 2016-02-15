@@ -15,18 +15,15 @@
 			<div class="nine columns stats">
 				<div class="ten columns">
 					<fieldset>
-						<legend>Pick a game</legend>
-						<div class="twelve columns" id="lobby"></div>
+						<legend>Waiting Room</legend>
+						<div class="twelve columns" id="waiting"></div>
 					</fieldset>
 				</div>
 			</div>
 			<div class="three columns menu full-page">
 				<h5>Lobby Menu</h5>
 				<div class="menu-item twelve columns">
-					<i class="menu-option fa fa-line-chart fa-2x"></i><a href="/" class="menu-option-text">Statistics</a>
-				</div>
-				<div class="menu-item twelve columns">
-					<i class="menu-option fa fa-gamepad fa-2x"></i><a href="/createGame" class="menu-option-text">Create a Game</a>
+					<i class="menu-option fa fa-close fa-2x"></i><a href="/lobby" class="menu-option-text">Leave Game</a>
 				</div>
 			</div>
 		</div>
@@ -40,6 +37,6 @@
 		</div>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.4/socket.io.js"></script>
 		<script src="../js/functions.js"></script>
-		<script src="../js/lobby.js"></script>
+		<script src="../js/waiting.js"></script>
 	</body>
 </html>

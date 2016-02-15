@@ -28,6 +28,9 @@
 				if (response["flag"] === true) toggleError(showError, "success", "error");
 				else toggleError(showError, "error", "success");
 				showError.textContent = response["msg"];
+				setTimeout(() => {
+					window.location.href = `/waiting/${response['id']}`;
+				}, 2000)
 			});
 		}
 	}, false);
