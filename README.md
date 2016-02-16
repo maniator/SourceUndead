@@ -35,7 +35,7 @@ You can now move around with other players in real time, see them on the same co
 
 Players now have a sense of hearing (but apparently shitty eyesight!). Your HUD now displays bearing flashers when players move in your vicinity.
 
-Currently developing the game lobby, to setup 15 player games.
+You can now create a game lobby, join a lobby, and sit in the waiting room in real time. Needs tweaks though, and special checks.
 
 Special Thanks
 ==============
