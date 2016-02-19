@@ -45,7 +45,7 @@ export function move(data, socket, bucket) {
 		grab location
 		check for functions (same tile, proximity..)
 	 */
-	client.smembers("game-1", (err, reply) => {
+	client.smembers("game-7472c407-ceff-4fc6-b740-01a6e1e1f519", (err, reply) => {
 		reply.map(x => {
 			client.hgetall(x, (err, reply) => {
 				if (reply.user != socket.request.session.player.user) { //no point in displaying yourself to yourself
@@ -59,6 +59,7 @@ export function move(data, socket, bucket) {
 						prox = proximity(reply, socket);
 						//TODO calculate directional bearing from angle returned
 						const sock = bucket[reply.id];
+						console.log(sock);
 						console.log(`Socket id of ${reply.user} - ${sock}`);
 						if (prox != -1)  {
 							console.log(`Sending ${prox} bearing to ${reply.user}`);
@@ -97,9 +98,9 @@ function calculateBearing(prox) {
 //funtion to check if 2 players are standing on the same time
 //return true or false
 function similarTile(data, socket) {
-	if (data.user == socket.session.player.user) return false;
-	if (+data.x == socket.session.player.x && +data.y == socket.session.player.y) {
-		const string = `${socket.session.player.user} and ${data.user} are on the same tile!`;
+	if (data.user == socket.request.session.player.user) return false;
+	if (+data.x == socket.request.session.player.x && +data.y == socket.request.session.player.y) {
+		const string = `${socket.request.session.player.user} and ${data.user} are on the same tile!`;
 		io.sockets.emit("sameTile", {msg:string});
 		return true;
 	} else return false;
@@ -108,10 +109,10 @@ function similarTile(data, socket) {
 //check distance to player via proximity check
 function proximity(data, socket) {
 	// Get the distance as a unit vector
-	const v = getDistance(socket.session.player, data);
+	const v = getDistance(socket.request.session.player, data);
 	console.log("Distance to player", v)
 	//boolean radius check
-	const rad = withinRadius(v, socket.session.player.radius);
+	const rad = withinRadius(v, socket.request.session.player.radius);
 	if (rad) {
 		const uv = makeUnit(v); //make unit vector
 		const angle = angleFromAtan(Math.atan2(+uv.x, +uv.y)); //get arctangent angle

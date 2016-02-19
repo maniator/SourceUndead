@@ -30,7 +30,7 @@ app.route("/")
 			"permission": permission
 		});
 
-		io.sockets.emit("loadWaitingRoom");
+		io.sockets.emit("loadWaitingRoom", {id:"game-"+id});
 
 		res.send({
 			"msg":"Your lobby was created! You will be redirected to your lobby momentarily..",

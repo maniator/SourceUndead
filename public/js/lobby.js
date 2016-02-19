@@ -65,6 +65,7 @@
 	const socket = io();
 	socket.on("refresh", loadLobby)
 	socket.on("loadWaitingRoom", data => {
+		console.log(data);
 		window.location.href= `waiting/${data.id}`;
 	})
 })();
