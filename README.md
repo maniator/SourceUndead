@@ -16,15 +16,15 @@ Setting up your own server is easy! The following steps should help you create a
 
 1. Install an Ubtuntu 14.04 instance
 2. Create your non-root user and give sudo permissions
-3. Install a mysql server by running `sudo apt-get install mysql`
+3. Install a mysql server by running `sudo apt-get install mysql-server`
 4. Install npm by running `sudo apt-get install npm`
 5. Run `npm install` to install the project dependencies
 6. Login to mysql using the credentials you created
 7. Run `database.sql` to create the database and tables
-8. Set up Redis server on your machine! Make sure Redis is running
+8. Set up Redis server on your machine! Make sure Redis is running `redis-server` on a dedicated terminal (or have it run in the background)
 9. Run `babel-node server` to compile the code and start the server*
 
-*Note: Eventually I will export a distribution model that does not require babel. If you do this on your own, use `node server.js --harmony` to start the server.
+*Note: Eventually I will export a distribution model that does not require babel. If you do this on your own, use `node server.js --harmony` to start the server. Make sure you install babel-cli globally!
 
 Game Status: [Under Development]
 ================================
