@@ -45,7 +45,7 @@ export function move(data, socket, bucket) {
 		grab location
 		check for functions (same tile, proximity..)
 	 */
-	client.smembers("game-7472c407-ceff-4fc6-b740-01a6e1e1f519", (err, reply) => {
+	client.smembers("game-03da68f2-8b80-43eb-a745-c6c3fec2b1fe", (err, reply) => {
 		reply.map(x => {
 			client.hgetall(x, (err, reply) => {
 				if (reply.user != socket.request.session.player.user) { //no point in displaying yourself to yourself

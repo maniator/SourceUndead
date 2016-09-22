@@ -23,10 +23,10 @@ app.route("/:id")
 			const games = await keysAsync("*game*");
 			//await response from mapped smembers method
 			const players = await Promise.all(games.map(game => smembersAsync(game)));
-			console.log(players);
+			console.log("Waiting room", players);
 			//metadata
 			const playerData = await Promise.all(players[0].map(player => hgetallAsync(player)));
-			console.log(playerData);
+			console.log("Waiting room", playerData);
 			const metakey = await keysAsync("*metadata*");
 			const data = await Promise.all(metakey.map(meta => hgetallAsync(meta)));
 			//compile results of awaited methods into object to return

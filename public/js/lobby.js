@@ -8,7 +8,15 @@
 			method: "POST",
 			data: `id=${game}`
 		}).then(data => {
-			console.log(data);
+			data = JSON.parse(data);
+			const error = document.getElementById("alert");
+			if (!data.success) {
+				error.classList.add("error");
+				error.textContent = data.msg;
+			} else {
+				error.classList.add("success");
+				error.textContent = data.msg;
+			}
 		});
 	}
 	//create the socket connection

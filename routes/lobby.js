@@ -46,6 +46,32 @@ app.route("/join")
 		//check if player is in another lobby, if so, return
 		//TODO lobby refresh on success
 	        const game = req.body.id;
+		
+		const keysAsync = Promise.promisify(client.keys, {context: client});
+		const smembersAsync = Promise.promisify(client.smembers, {context:client});
+		const hgetallAsync = Promise.promisify(client.hgetall, {context:client});
+		async function isInLobby() {
+			const games = await keysAsync("*game*");
+			console.log("joining room", games);
+                        //await response from mapped smembers method
+                       	const players = await Promise.all(games.map(game => smembersAsync(game)));
+			console.log("joining room", players);
+			
+			let exit = false;
+			players.forEach(p => {
+				if (p == req.session.player.id) {
+					console.log("Player is in a lobby, cancel join.");
+					exit = true;
+				}	
+			});
+			if (exit) {
+				res.send({
+					msg: "You are already in a lobby and cannot join another",
+					success: false
+				});
+				return true;
+			} else return false;
+		}
 		client.sadd(game, req.session.player.id);
 		let scardAsync = Promise.promisify(client.scard, {context:client});
 		/*let data = client.scard(game, (err, reply) => {
@@ -55,25 +81,28 @@ app.route("/join")
 			const keyLength = await scardAsync(game);
 			return keyLength;
 		}
-		countPlayer().then(data => {
-			console.log(data);
-			if (data >= 15) return false; //do not add player, lobby is full!
-        		else { 
-				client.hmset(req.session.player.id, req.session.player, (err, reply) => {
-					if (err) {
-						res.send({
-							msg: "There was an error joining this lobby. Please try again.",
+		isInLobby().then(flag => {
+			console.log("do not add to lobby");
+			if (flag) return false; //exit
+			countPlayer().then(data => {
+				if (data >= 15) return false; //do not add player, lobby is full!
+        			else { 
+					client.hmset(req.session.player.id, req.session.player, (err, reply) => {
+						if (err) {
+							res.send({
+								msg: "There was an error joining this lobby. Please try again.",
 							success: false
-						});
-					} else {
-						io.sockets.emit("loadWaitingRoom", {id:game});
-						res.send({
-							msg: "You have joined the game!",
-							success: true
-						});
-					}
-				});
-			}
+							});
+						} else {
+							io.sockets.emit("loadWaitingRoom", {id:game});
+								res.send({
+								msg: "You have joined the game!",
+								success: true
+							});
+						}
+					});
+				}
+			});
 		});
 	});
 export default app;
