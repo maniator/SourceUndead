@@ -72,7 +72,6 @@ app.route("/join")
 				return true;
 			} else return false;
 		}
-		client.sadd(game, req.session.player.id);
 		let scardAsync = Promise.promisify(client.scard, {context:client});
 		/*let data = client.scard(game, (err, reply) => {
 			console.log(reply)
@@ -87,6 +86,8 @@ app.route("/join")
 			countPlayer().then(data => {
 				if (data >= 15) return false; //do not add player, lobby is full!
         			else { 
+					client.sadd(game, req.session.player.id);
+					socket.request.session.player.playerGameId = game;
 					client.hmset(req.session.player.id, req.session.player, (err, reply) => {
 						if (err) {
 							res.send({

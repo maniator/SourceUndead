@@ -63,15 +63,23 @@ function authenticate(req, res, next) {
 	} else next();
 }
 
+function sendToWaiting(req, res, next) {
+	if (req.session.player.playerGameId) {
+		console.log(req.session.player.playerGameId);
+		console.log("Redirecting to waiting room -- player is logged as waiting.");
+		res.redirect("/waiting/"+req.session.player.playerGameId);
+	} else next();
+}
+
 //apply middleware for template/post routing
 app.use("/map", authenticate, map);
 app.use("/create", create);
 app.use("/login", login);
 app.use("/logout", logout);
-app.use("/lobby", authenticate, lobby);
-app.use("/createGame", authenticate, createGame);
+app.use("/lobby", [authenticate, sendToWaiting], lobby);
+app.use("/createGame", [authenticate, sendToWaiting], createGame);
 app.use("/waiting", authenticate, waiting);
-app.use("/", authenticate, index);
+app.use("/", [authenticate, sendToWaiting], index);
 
 //function routing for socket handlers
 import {move, init} from "./routes/io-functions";
@@ -101,7 +109,7 @@ io.sockets.on("connection", socket => {
 		}
 		console.log("Connection has been made", socket.request.sessionID);
 
-		socket.on("move", (data) => move(data, socket, bucket));
+		socket.on("move", (data) => move(data, socket, bucket, socket.request.session.player.playerGameId));
 		
 		//dicsonnect
 		//-dump redis TODO: into mysql

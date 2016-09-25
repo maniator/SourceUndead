@@ -29,6 +29,8 @@ app.route("/")
 			"name":name,
 			"permission": permission
 		});
+		console.log("player created game id:", id);
+		req.session.player.playerGameId = "game-"+id;
 
 		io.sockets.emit("loadWaitingRoom", {id:"game-"+id});
 

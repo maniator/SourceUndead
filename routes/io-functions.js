@@ -15,7 +15,7 @@ const movement = {
 
 //socket move function
 //pass in the socket session and data
-export function move(data, socket, bucket) {
+export function move(data, socket, bucket, gameId) {
 	if (data.direction === "null") {
 		return false;
 	} //if no direction, ignore this function
@@ -45,7 +45,8 @@ export function move(data, socket, bucket) {
 		grab location
 		check for functions (same tile, proximity..)
 	 */
-	client.smembers("game-03da68f2-8b80-43eb-a745-c6c3fec2b1fe", (err, reply) => {
+	console.log("MAP GAME ID", gameId);
+	client.smembers(gameId, (err, reply) => {
 		reply.map(x => {
 			client.hgetall(x, (err, reply) => {
 				if (reply.user != socket.request.session.player.user) { //no point in displaying yourself to yourself
